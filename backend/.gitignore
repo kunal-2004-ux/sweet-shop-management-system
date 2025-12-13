@@ -3,3 +3,6 @@ dist
 .env
 
 /src/generated/prisma
+prisma/dev.db
+prisma/*.db
+prisma.config.ts

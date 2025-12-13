@@ -7,6 +7,13 @@ interface CreateSweetInput {
   quantityInStock: number;
 }
 
+interface SearchSweetInput {
+  name?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
 export class SweetService {
   async addSweetToCatalog(input: CreateSweetInput) {
     if (
@@ -24,6 +31,65 @@ export class SweetService {
         category: input.category,
         price: input.price,
         quantityInStock: input.quantityInStock
+      }
+    });
+  }
+
+  async getAllSweets() {
+    return prisma.sweet.findMany();
+  }
+
+  async searchSweets(filters: SearchSweetInput) {
+    return prisma.sweet.findMany({
+      where: {
+        name: filters.name ? { contains: filters.name } : undefined,
+        category: filters.category ?? undefined,
+        price: {
+          gte: filters.minPrice,
+          lte: filters.maxPrice
+        }
+      }
+    });
+  }
+
+  async purchaseSweet(sweetId: string) {
+    const sweet = await prisma.sweet.findUnique({
+      where: { id: sweetId }
+    });
+
+    if (!sweet) {
+      throw new Error("Sweet not found");
+    }
+
+    if (sweet.quantityInStock <= 0) {
+      throw new Error("Sweet is out of stock");
+    }
+
+    return prisma.sweet.update({
+      where: { id: sweetId },
+      data: {
+        quantityInStock: sweet.quantityInStock - 1
+      }
+    });
+  }
+
+  async restockSweet(sweetId: string, amount: number) {
+    if (amount <= 0) {
+      throw new Error("Restock amount must be greater than zero");
+    }
+
+    const sweet = await prisma.sweet.findUnique({
+      where: { id: sweetId }
+    });
+
+    if (!sweet) {
+      throw new Error("Sweet not found");
+    }
+
+    return prisma.sweet.update({
+      where: { id: sweetId },
+      data: {
+        quantityInStock: sweet.quantityInStock + amount
       }
     });
   }
