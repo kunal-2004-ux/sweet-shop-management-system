@@ -1,9 +1,9 @@
+import { generateToken } from "./jwt";
+
 interface AuthInput {
   email: string;
   password: string;
 }
-
-type UserRole = "USER" | "ADMIN";
 
 export class AuthService {
   registerNewUser(input: AuthInput) {
@@ -14,7 +14,7 @@ export class AuthService {
     return {
       id: "user-1",
       email: input.email,
-      role: "USER" as UserRole
+      role: "USER"
     };
   }
 
@@ -23,9 +23,11 @@ export class AuthService {
       throw new Error("Email and password are required to login");
     }
 
-    return {
-      token: "dummy-jwt-token",
-      role: "USER" as UserRole
-    };
+    const token = generateToken({
+      userId: "user-1",
+      role: "USER"
+    });
+
+    return { token };
   }
 }

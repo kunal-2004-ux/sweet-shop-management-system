@@ -35,6 +35,27 @@ export class SweetService {
     });
   }
 
+  async updateSweet(
+    sweetId: string,
+    updates: Partial<{
+      name: string;
+      category: string;
+      price: number;
+      quantityInStock: number;
+    }>
+  ) {
+    return prisma.sweet.update({
+      where: { id: sweetId },
+      data: updates
+    });
+  }
+
+  async deleteSweet(sweetId: string) {
+    return prisma.sweet.delete({
+      where: { id: sweetId }
+    });
+  }
+
   async getAllSweets() {
     return prisma.sweet.findMany();
   }

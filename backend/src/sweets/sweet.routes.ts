@@ -4,15 +4,22 @@ import {
   getAllSweets,
   searchSweets,
   purchaseSweet,
-  restockSweet
+  restockSweet,
+  updateSweet,
+  deleteSweet
 } from "./sweet.controller";
+import { authenticate } from "../auth/auth.middleware";
 
 const router = Router();
 
-router.post("/", addSweet);
-router.get("/", getAllSweets);
-router.get("/search", searchSweets);
-router.post("/:id/purchase", purchaseSweet);
-router.post("/:id/restock", restockSweet);
+router.post("/", authenticate, addSweet);
+router.get("/", authenticate, getAllSweets);
+router.get("/search", authenticate, searchSweets);
+router.post("/:id/purchase", authenticate, purchaseSweet);
+router.post("/:id/restock", authenticate, restockSweet);
+
+
+router.put("/:id", authenticate, updateSweet);
+router.delete("/:id", authenticate, deleteSweet);
 
 export default router;
