@@ -82,31 +82,37 @@ export class AuthService {
   }
 
   async loginUser(input: LoginInput) {
-    if (!input.email || !input.password) {
-      throw new Error("Email and password are required to login");
-    }
-
-    // Find user in database
-    const user = await prisma.user.findUnique({
-      where: { email: input.email }
-    });
-
-    if (!user) {
-      throw new Error("Invalid email or password");
-    }
-
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(input.password, user.password);
-    if (!isPasswordValid) {
-      throw new Error("Invalid email or password");
-    }
-
-    // Generate token with userId and role
-    const token = generateToken({
-      userId: user.id,
-      role: user.role as "USER" | "ADMIN"
-    });
-
-    return { token };
+  if (!input.email || !input.password) {
+    throw new Error("Email and password are required to login");
   }
+
+  const user = await prisma.user.findUnique({
+    where: { email: input.email }
+  });
+
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
+
+  const isPasswordValid = await bcrypt.compare(
+    input.password,
+    user.password
+  );
+
+  if (!isPasswordValid) {
+    throw new Error("Invalid email or password");
+  }
+
+  const token = generateToken({
+    userId: user.id,
+    role: user.role as "USER" | "ADMIN"
+  });
+
+  // ✅ THIS IS THE FIX
+  return {
+    token,
+    role: user.role
+  };
+}
+
 }

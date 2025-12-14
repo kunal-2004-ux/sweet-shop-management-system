@@ -1,23 +1,38 @@
 import { useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("token")
+  const [page, setPage] = useState<"login" | "register" | "dashboard">(
+    localStorage.getItem("token") ? "dashboard" : "login"
   );
-  const [showRegister, setShowRegister] = useState(false);
 
-  if (!isAuthenticated) {
-    return showRegister ? (
-      <RegisterPage onLoginClick={() => setShowRegister(false)} />
-    ) : (
+  function handleLogin() {
+    setPage("dashboard");
+  }
+
+  function handleLogout() {
+    localStorage.clear();
+    setPage("login");
+  }
+
+  if (page === "login") {
+    return (
       <LoginPage
-        onLogin={() => setIsAuthenticated(true)}
-        onRegisterClick={() => setShowRegister(true)}
+        onLogin={handleLogin}
+        onRegisterClick={() => setPage("register")}
       />
     );
   }
 
-  return <h2 style={{ textAlign: "center" }}>Dashboard coming next 🚀</h2>;
+  if (page === "register") {
+    return (
+      <RegisterPage
+        onLoginClick={() => setPage("login")}
+      />
+    );
+  }
+
+  return <Dashboard onLogout={handleLogout} />;
 }

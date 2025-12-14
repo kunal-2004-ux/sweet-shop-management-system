@@ -1,9 +1,8 @@
-export default function Navbar() {
-  function logout() {
-    localStorage.removeItem("token");
-    window.location.reload();
-  }
-
+export default function Navbar({
+  onLogout
+}: {
+  onLogout: () => void;
+}) {
   return (
     <div
       style={{
@@ -14,7 +13,11 @@ export default function Navbar() {
       }}
     >
       <h2>🍬 Sweet Shop</h2>
-      <button className="button" onClick={logout}>
+
+      <button
+        className="button"
+        onClick={onLogout}
+      >
         Logout
       </button>
     </div>

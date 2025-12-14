@@ -2,15 +2,30 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000/api";
 
-export async function login(email: string, password: string) {
-  const response = await axios.post(`${API_URL}/auth/login`, {
-    email,
-    password
-  });
-
-  localStorage.setItem("token", response.data.token);
-  localStorage.setItem("role", response.data.role);
+interface AuthResponse {
+  token: string;
+  role: "USER" | "ADMIN";
 }
+
+/* ---------------- LOGIN ---------------- */
+
+export async function login(
+  email: string,
+  password: string
+): Promise<AuthResponse> {
+  const res = await axios.post<AuthResponse>(
+    `${API_URL}/auth/login`,
+    { email, password }
+  );
+
+  // ✅ Persist auth state
+  localStorage.setItem("token", res.data.token);
+  localStorage.setItem("role", res.data.role);
+
+  return res.data;
+}
+
+/* ---------------- REGISTER ---------------- */
 
 export async function register(
   email: string,
@@ -18,10 +33,12 @@ export async function register(
   phoneNumber: string,
   role: "USER" | "ADMIN"
 ) {
-  await axios.post(`${API_URL}/auth/register`, {
+  const res = await axios.post(`${API_URL}/auth/register`, {
     email,
     password,
     phoneNumber,
     role
   });
+
+  return res.data;
 }

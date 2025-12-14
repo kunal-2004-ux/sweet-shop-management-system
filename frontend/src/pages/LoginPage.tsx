@@ -29,7 +29,7 @@ return (
         <div className="auth-logo">🍬</div>
         <div className="auth-title">Sweet Shop Management System</div>
         <div className="auth-subtitle">
-          Manage and order sweets online 
+          Manage and order sweets 
         </div>
       </div>
 
