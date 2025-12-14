@@ -1,64 +1,83 @@
 ﻿import { useState } from "react";
 import { register } from "../api/authApi";
+import "../styles/auth.css";
 
-export default function RegisterPage({ onRegister }: { onRegister: () => void }) {
+export default function RegisterPage({
+  onLoginClick
+}: {
+  onLoginClick: () => void;
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [role, setRole] = useState<"USER" | "ADMIN">("USER");
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await register(email, password);
-    onRegister();
+    try {
+      await register(email, password, phoneNumber, role);
+      alert("Account created. Please login.");
+      onLoginClick();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Registration failed");
+    }
   }
+return (
+  <div className="auth-container">
+    <div className="auth-card">
+      <div className="auth-header">
+        <div className="auth-logo">🍬</div>
+        <div className="auth-title">Sweet Shop</div>
+        <div className="auth-subtitle">
+          Create your account to start ordering
+        </div>
+      </div>
 
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "linear-gradient(135deg, #fdf2f8, #f9fafb)"
-      }}
-    >
-      <div className="card" style={{ width: 380, padding: 24 }}>
-        <h2 style={{ textAlign: "center", marginBottom: 16 }}>
-          🍭 Create Account
-        </h2>
+      <h2>Create Account</h2>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{
-              width: "100%",
-              marginBottom: 12,
-              padding: 10,
-              borderRadius: 6,
-              border: "1px solid #d1d5db"
-            }}
-          />
+      {error && <p className="auth-error">{error}</p>}
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{
-              width: "100%",
-              marginBottom: 16,
-              padding: 10,
-              borderRadius: 6,
-              border: "1px solid #d1d5db"
-            }}
-          />
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-          <button className="button" type="submit" style={{ width: "100%" }}>
-            Register
-          </button>
-        </form>
+        <input
+          type="password"
+          placeholder="Password (min 6 chars)"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <input
+          placeholder="Phone Number"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          required
+        />
+
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value as "USER" | "ADMIN")}
+        >
+          <option value="USER">Customer</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+
+        <button type="submit">Register</button>
+      </form>
+
+      <div className="auth-switch" onClick={onLoginClick}>
+        Already have an account? Login
       </div>
     </div>
-  );
+  </div>
+);
+
+  
 }

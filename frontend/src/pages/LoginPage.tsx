@@ -1,5 +1,6 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { login } from "../api/authApi";
+import "../styles/auth.css";
 
 export default function LoginPage({
   onLogin,
@@ -10,74 +11,57 @@ export default function LoginPage({
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await login(email, password);
-    onLogin();
+    try {
+      await login(email, password);
+      onLogin();
+    } catch {
+      setError("Invalid email or password");
+    }
   }
+return (
+  <div className="auth-container">
+    <div className="auth-card">
+      <div className="auth-header">
+        <div className="auth-logo">🍬</div>
+        <div className="auth-title">Sweet Shop Management System</div>
+        <div className="auth-subtitle">
+          Manage and order sweets online 
+        </div>
+      </div>
 
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "linear-gradient(135deg, #fdf2f8, #f9fafb)"
-      }}
-    >
-      <div className="card" style={{ width: 380, padding: 24 }}>
-        <h2 style={{ textAlign: "center", marginBottom: 16 }}>
-          🍬 Sweet Shop Login
-        </h2>
+      <h2>Login</h2>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{
-              width: "100%",
-              marginBottom: 12,
-              padding: 10,
-              borderRadius: 6,
-              border: "1px solid #d1d5db"
-            }}
-          />
+      {error && <p className="auth-error">{error}</p>}
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{
-              width: "100%",
-              marginBottom: 16,
-              padding: 10,
-              borderRadius: 6,
-              border: "1px solid #d1d5db"
-            }}
-          />
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-          <button className="button" type="submit" style={{ width: "100%" }}>
-            Login
-          </button>
-        </form>
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-        <p
-          style={{
-            marginTop: 14,
-            textAlign: "center",
-            fontSize: 14,
-            cursor: "pointer",
-            color: "#ec4899"
-          }}
-          onClick={onRegisterClick}
-        >
-          New user? Create an account
-        </p>
+        <button type="submit">Login</button>
+      </form>
+
+      <div className="auth-switch" onClick={onRegisterClick}>
+        New user? Create an account
       </div>
     </div>
-  );
+  </div>
+);
+
+  
 }

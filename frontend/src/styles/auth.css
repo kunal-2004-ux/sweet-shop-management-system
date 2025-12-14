@@ -1,0 +1,96 @@
+/* auth.css */
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+.auth-card {
+  background: #ffffff;
+  padding: 32px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 24px;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-card input,
+.auth-card select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.auth-card input:focus,
+.auth-card select:focus {
+  outline: none;
+  border-color: #ec4899;
+}
+
+.auth-card button {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #ec4899;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.auth-card button:hover {
+  background: #db2777;
+}
+
+.auth-switch {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 14px;
+  color: #ec4899;
+  cursor: pointer;
+}
+
+.auth-error {
+  color: #dc2626;
+  font-size: 14px;
+  text-align: center;
+}
+.auth-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-logo {
+  font-size: 40px;
+}
+
+.auth-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
