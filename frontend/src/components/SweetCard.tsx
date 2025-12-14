@@ -26,20 +26,24 @@ export default function SweetCard({
   onRestocked: () => void;
   onDeleted: () => void;
 }) {
-  const [quantity, setQuantity] = useState(1);
-  const [restockAmount, setRestockAmount] = useState(1);
+  const [quantity, setQuantity] = useState("1");
+  const [restockAmount, setRestockAmount] = useState("1");
 
   const outOfStock = sweet.quantityInStock === 0;
+  const quantityNum = parseInt(quantity, 10) || 0;
+  const restockNum = parseInt(restockAmount, 10) || 0;
 
   async function handlePurchase() {
-    if (quantity <= 0 || quantity > sweet.quantityInStock) return;
-    await purchaseSweet(sweet.id, quantity);
+    if (quantityNum <= 0 || quantityNum > sweet.quantityInStock) return;
+    await purchaseSweet(sweet.id, quantityNum);
+    setQuantity("1");
     onPurchased();
   }
 
   async function handleRestock() {
-    if (restockAmount <= 0) return;
-    await restockSweet(sweet.id, restockAmount);
+    if (restockNum <= 0) return;
+    await restockSweet(sweet.id, restockNum);
+    setRestockAmount("1");
     onRestocked();
   }
 
@@ -50,93 +54,97 @@ export default function SweetCard({
   }
 
   return (
-    <div
-      style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: 12,
-        padding: 16,
-        width: 260
-      }}
-    >
-      <h3>{sweet.name}</h3>
-      <p>Category: {sweet.category}</p>
-      <p>Price: ₹{sweet.price}</p>
-      <p>Stock: {sweet.quantityInStock}</p>
+    <div className="sweet-card">
+      {/* Card Header */}
+      <div className="sweet-card-header">
+        <h3 className="sweet-card-name">{sweet.name}</h3>
+        <div className="sweet-card-category">{sweet.category}</div>
+      </div>
 
-      {/* USER VIEW */}
+      {/* Price & Stock Info */}
+      <div className="sweet-card-info">
+        <div className="sweet-card-info-item">
+          <div className="sweet-card-info-label">Price</div>
+          <div className="sweet-card-info-value price">₹{sweet.price}</div>
+        </div>
+        <div className="sweet-card-info-item">
+          <div className="sweet-card-info-label">In Stock</div>
+          <div className={`sweet-card-info-value ${outOfStock ? 'out-of-stock' : ''}`}>
+            {sweet.quantityInStock}
+          </div>
+        </div>
+      </div>
+
+      {/* USER VIEW - Purchase Section */}
       {!isAdmin && (
-        <>
+        <div className="sweet-card-purchase">
+          <label htmlFor={`qty-${sweet.id}`}>Quantity</label>
           <input
+            id={`qty-${sweet.id}`}
             type="number"
             min={1}
             max={sweet.quantityInStock}
             value={quantity}
             disabled={outOfStock}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            style={{ width: "100%", marginBottom: 8 }}
+            onChange={(e) => setQuantity(e.target.value)}
+            className={`sweet-card-quantity-input ${quantityNum > sweet.quantityInStock ? 'input-error' : ''}`}
           />
 
+          {quantityNum > sweet.quantityInStock && (
+            <p className="quantity-error">
+              Cannot order more than {sweet.quantityInStock} items
+            </p>
+          )}
+
+          {quantityNum <= 0 && quantity !== "" && (
+            <p className="quantity-error">
+              Please enter a valid quantity
+            </p>
+          )}
+
           <button
-            disabled={outOfStock}
+            disabled={outOfStock || quantityNum <= 0 || quantityNum > sweet.quantityInStock}
             onClick={handlePurchase}
-            style={{
-              width: "100%",
-              padding: 8,
-              borderRadius: 8,
-              border: "none",
-              background: outOfStock ? "#9ca3af" : "#22c55e",
-              color: "white",
-              cursor: outOfStock ? "not-allowed" : "pointer"
-            }}
+            className="btn-purchase"
           >
             {outOfStock ? "Out of Stock" : "Purchase"}
           </button>
-        </>
+        </div>
       )}
 
-      {/* ADMIN VIEW */}
+      {/* ADMIN VIEW - Restock & Delete Section */}
       {isAdmin && (
-        <>
-          <hr style={{ margin: "12px 0" }} />
+        <div className="sweet-card-admin">
+          <div className="admin-section-title">Admin Actions</div>
 
-          <label>Restock Quantity</label>
-          <input
-            type="number"
-            min={1}
-            value={restockAmount}
-            onChange={(e) => setRestockAmount(Number(e.target.value))}
-            style={{ width: "100%", marginBottom: 8 }}
-          />
+          <div className="admin-restock-group">
+            <label htmlFor={`restock-${sweet.id}`}>Restock Quantity</label>
+            <input
+              id={`restock-${sweet.id}`}
+              type="number"
+              min={1}
+              value={restockAmount}
+              onChange={(e) => setRestockAmount(e.target.value)}
+              className="admin-restock-input"
+            />
+            <button
+              onClick={handleRestock}
+              className="btn-restock"
+            >
+              Restock
+            </button>
+          </div>
 
-          <button
-            onClick={handleRestock}
-            style={{
-              width: "100%",
-              padding: 8,
-              borderRadius: 8,
-              border: "none",
-              background: "#3b82f6",
-              color: "white",
-              marginBottom: 8
-            }}
-          >
-            Restock
-          </button>
-
-          <button
-            onClick={handleDelete}
-            style={{
-              width: "100%",
-              padding: 8,
-              borderRadius: 8,
-              border: "none",
-              background: "#ef4444",
-              color: "white"
-            }}
-          >
-            Delete
-          </button>
-        </>
+          <div className="admin-delete-group">
+            <label>Delete Sweet</label>
+            <button
+              onClick={handleDelete}
+              className="btn-delete"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

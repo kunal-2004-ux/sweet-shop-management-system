@@ -4,22 +4,18 @@ export default function Navbar({
   onLogout: () => void;
 }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 24
-      }}
-    >
-      <h2>🍬 Sweet Shop</h2>
+    <nav className="navbar">
+      <div className="navbar-brand">
+        <span className="navbar-logo">🍬</span>
+        <h1 className="navbar-title">Sweet Shop</h1>
+      </div>
 
       <button
-        className="button"
+        className="navbar-logout"
         onClick={onLogout}
       >
         Logout
       </button>
-    </div>
+    </nav>
   );
 }

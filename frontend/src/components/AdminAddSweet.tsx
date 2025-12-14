@@ -35,67 +35,64 @@ export default function AdminAddSweet({
   }
 
   return (
-    <div
-      style={{
-        marginTop: 32,
-        padding: 20,
-        border: "1px solid #e5e7eb",
-        borderRadius: 12,
-        maxWidth: 420
-      }}
-    >
+    <div className="admin-add-sweet-form">
       <h3>Add New Sweet</h3>
+      <p className="admin-add-sweet-subtitle">Add a new item to the inventory</p>
 
       {error && (
-        <p style={{ color: "red", marginBottom: 8 }}>{error}</p>
+        <p className="form-error">{error}</p>
       )}
 
       <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Sweet Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          style={{ width: "100%", marginBottom: 8, padding: 8 }}
-        />
+        <div className="admin-form-group">
+          <label htmlFor="sweet-name">Sweet Name</label>
+          <input
+            id="sweet-name"
+            placeholder="e.g. Gulab Jamun"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
 
-        <input
-          placeholder="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          required
-          style={{ width: "100%", marginBottom: 8, padding: 8 }}
-        />
+        <div className="admin-form-group">
+          <label htmlFor="sweet-category">Category</label>
+          <input
+            id="sweet-category"
+            placeholder="e.g. Traditional"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          />
+        </div>
 
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
-          required
-          style={{ width: "100%", marginBottom: 8, padding: 8 }}
-        />
+        <div className="admin-form-group">
+          <label htmlFor="sweet-price">Price (₹)</label>
+          <input
+            id="sweet-price"
+            type="number"
+            placeholder="0"
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            required
+          />
+        </div>
 
-        <input
-          type="number"
-          placeholder="Initial Stock"
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          required
-          style={{ width: "100%", marginBottom: 12, padding: 8 }}
-        />
+        <div className="admin-form-group">
+          <label htmlFor="sweet-stock">Initial Stock</label>
+          <input
+            id="sweet-stock"
+            type="number"
+            placeholder="0"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            required
+          />
+        </div>
 
         <button
           type="submit"
-          style={{
-            width: "100%",
-            padding: 10,
-            borderRadius: 8,
-            border: "none",
-            background: "#22c55e",
-            color: "white",
-            cursor: "pointer"
-          }}
+          className="btn-add-sweet"
         >
           Add Sweet
         </button>

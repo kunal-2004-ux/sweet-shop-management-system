@@ -31,23 +31,23 @@ export default function Dashboard({
     <>
       <Navbar onLogout={onLogout} />
 
-      <div style={{ padding: 24 }}>
-        <h2>Available Sweets</h2>
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <h2 className="dashboard-title">Available Sweets</h2>
+          <p className="dashboard-subtitle">
+            {isAdmin
+              ? "Manage your inventory - restock or remove items"
+              : "Browse our delicious collection and place your order"}
+          </p>
+        </div>
 
         {sweets.length === 0 && (
-          <p style={{ color: "#6b7280" }}>
+          <p className="dashboard-empty">
             No sweets available yet.
           </p>
         )}
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-            gap: 16,
-            marginTop: 16
-          }}
-        >
+        <div className="sweet-grid">
           {sweets.map((sweet) => (
             <SweetCard
               key={sweet.id}
