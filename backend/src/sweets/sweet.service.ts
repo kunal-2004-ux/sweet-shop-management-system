@@ -73,7 +73,12 @@ export class SweetService {
     });
   }
 
-  async purchaseSweet(sweetId: string) {
+  async purchaseSweet(sweetId: string, quantity: number = 1) {
+    // Validate quantity
+    if (!quantity || quantity <= 0) {
+      throw new Error("Quantity must be greater than zero");
+    }
+
     const sweet = await prisma.sweet.findUnique({
       where: { id: sweetId }
     });
@@ -82,14 +87,14 @@ export class SweetService {
       throw new Error("Sweet not found");
     }
 
-    if (sweet.quantityInStock <= 0) {
-      throw new Error("Sweet is out of stock");
+    if (sweet.quantityInStock < quantity) {
+      throw new Error("Insufficient stock available");
     }
 
     return prisma.sweet.update({
       where: { id: sweetId },
       data: {
-        quantityInStock: sweet.quantityInStock - 1
+        quantityInStock: sweet.quantityInStock - quantity
       }
     });
   }

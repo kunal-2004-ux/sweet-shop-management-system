@@ -8,18 +8,19 @@ import {
   updateSweet,
   deleteSweet
 } from "./sweet.controller";
-import { authenticate } from "../auth/auth.middleware";
+import { authenticate, requireAdmin } from "../auth/auth.middleware";
 
 const router = Router();
 
-router.post("/", authenticate, addSweet);
+// Admin-only routes: add, update, delete, restock
+router.post("/", authenticate, requireAdmin, addSweet);
+router.put("/:id", authenticate, requireAdmin, updateSweet);
+router.delete("/:id", authenticate, requireAdmin, deleteSweet);
+router.post("/:id/restock", authenticate, requireAdmin, restockSweet);
+
+// User routes: view, search, purchase
 router.get("/", authenticate, getAllSweets);
 router.get("/search", authenticate, searchSweets);
 router.post("/:id/purchase", authenticate, purchaseSweet);
-router.post("/:id/restock", authenticate, restockSweet);
-
-
-router.put("/:id", authenticate, updateSweet);
-router.delete("/:id", authenticate, deleteSweet);
 
 export default router;

@@ -7,6 +7,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Note: SQLite doesn't support enums, so role is stored as String
+// Valid values: "USER" | "ADMIN" - enforced at application level
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String
+  phoneNumber  String
+  role         String   @default("USER")
+  createdAt    DateTime @default(now())
+}
+
 model Sweet {
   id              String   @id @default(uuid())
   name            String
